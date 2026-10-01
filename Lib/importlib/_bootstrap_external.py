@@ -496,13 +496,14 @@ _RAW_MAGIC_NUMBER = int.from_bytes(MAGIC_NUMBER, 'little')  # For import.c
 _PYCACHE = '__pycache__'
 _OPT = 'opt-'
 
-SOURCE_SUFFIXES = ['.py']
+SOURCE_SUFFIXES = ['.afs', '.py']
 if _MS_WINDOWS:
+    SOURCE_SUFFIXES.append('.afsw')
     SOURCE_SUFFIXES.append('.pyw')
 
 EXTENSION_SUFFIXES = _imp.extension_suffixes()
 
-BYTECODE_SUFFIXES = ['.pyc']
+BYTECODE_SUFFIXES = ['.afsc', '.pyc']
 # Deprecated.
 DEBUG_BYTECODE_SUFFIXES = OPTIMIZED_BYTECODE_SUFFIXES = BYTECODE_SUFFIXES
 

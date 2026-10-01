@@ -89,3 +89,46 @@ class _Helper(object):
     def __call__(self, *args, **kwds):
         import pydoc
         return pydoc.help(*args, **kwds)
+
+# ====================================================================
+# CUSTOM FORK ENTRANCE: CINEMATIC BOOT TYPEWRITER
+# ====================================================================
+
+import time
+import sys
+
+def run_intro():
+    try:
+        # 1. SEND ANSI ESCAPE CODES: Clear terminal window and snap cursor to top (0,0)
+        # This forces the screen completely black instantly
+        sys.stdout.write("\033[2J\033[H")
+        sys.stdout.flush()
+
+        # 2. DEFINED SYNTAX PAYLOAD
+        message = 'print("Hello, world!")\n'
+
+        # 3. LIVE TYPEWRITER ITERATOR MATRIX
+        for letter in message:
+            sys.stdout.write(letter)
+            sys.stdout.flush()
+            time.sleep(0.3)  # Speed of the typing animation delay
+
+        # Brief dramatic pause on the text frame layout
+        time.sleep(1)
+
+        # 4. CLEAR CANVAS AND PREPARE FOR APP LAUNCH
+        sys.stdout.write("\033[2J\033[H")
+        sys.stdout.write("=====================================================================\n")
+        sys.stdout.write("APEX-FORCE CONTROL STUDIOS — CORE TERMINAL\n")
+        sys.stdout.write("=====================================================================\n")
+        sys.stdout.write("System status: SECURE RAM-SMASH ACTIVE\n")
+        sys.stdout.write("=====================================================================\n\n")
+        sys.stdout.flush()
+
+    except Exception:
+        # Failsafe: If anything goes wrong during startup, bypass quietly
+        # so the standard terminal prompt doesn't brick entirely.
+        pass
+
+# Run the boot animation immediately as the platform prepares initialization frames
+run_intro()

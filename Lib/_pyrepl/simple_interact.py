@@ -23,6 +23,21 @@ the CPython prompt as closely as possible, with the exception of
 allowing multiline input and multiline history entries.
 """
 
+# View Apex-Force-Internal//0.0.1Alpha=Bella=TrueCopyright for more
+# information regarding the copyright status of CPyThomas and the wider
+# ApexForce Studios projects.
+
+# Specific sections of the entire repository do not belong to the original
+# developer and should not be treated as such. However, we could not scour
+# the entire codebase to see where we made our modifications. However,
+# where we remembered during the creation of this code, we did add our
+# notes to say specifically what we added.
+
+# Inside of the terminal you can copy/paste the line:
+# Apex-Force-Internal//0.0.1Alpha=Bella=TrueCopyright=Local=True
+# to see the files text if you are simply too lazy to move your cursor over to the
+# file explorer.
+
 from __future__ import annotations
 
 import _sitebuiltins
@@ -71,6 +86,37 @@ def _clear_screen():
     reader = _get_reader()
     reader.scheduled_commands.append("clear_screen")
 
+# The command below allows the user to interact with the ApexForce librarys
+# built-in to the language.
+
+from pathlib import Path
+
+class BuiltinREPLCommand:
+    def __init__(self, action_func):
+        self.action_func = action_func
+
+    def __repr__(self):
+        self.action_func()
+        return ""
+
+def _print_built_in_file():
+    try:
+        # __file__ points to Lib/_pyrepl/simple_interact.py
+        # parents[2] takes us up 3 levels: _pyrepl -> Lib -> CPython Root
+        repo_root = Path(__file__).resolve().parents[2]
+        target_file = repo_root / "LICENSE"
+
+        if target_file.exists():
+            print(f"📖 Printing {target_file.name}:\n" + "—" * 40)
+            print(target_file.read_text(encoding="utf-8"))
+            print("—" * 40)
+        else:
+            print(f"❌ Could not find file path: {target_file}")
+
+    except Exception as e:
+        print(f"⚠️ Error reading internal file: {e}")
+
+#----------------------------------------------------------------------------
 
 REPL_COMMANDS = {
     "exit": _sitebuiltins.Quitter('exit', ''),
@@ -79,6 +125,12 @@ REPL_COMMANDS = {
     "help": _sitebuiltins._Helper(),
     "clear": _clear_screen,
     "\x1a": _sitebuiltins.Quitter('\x1a', ''),
+
+# The commandes below this line are custom commands constructed to be compatible
+# with the ApexForce Studios variation of Python.
+
+    "license_text": BuiltinREPLCommand(_print_built_in_file),
+
 }
 
 
@@ -143,9 +195,58 @@ def run_multiline_interactive_console(
             ps1 = getattr(sys, "ps1", ">>> ")
             ps2 = getattr(sys, "ps2", "... ")
             try:
+                # 1. Capture the raw multiline user string input first
                 statement = multiline_input(more_lines, ps1, ps2)
             except EOFError:
                 break
+
+            # =====================================================================
+            # THE FIX: DEFINE THE VARIABLE IMMEDIATELY AFTER CAPTURING STATEMENT
+            # =====================================================================
+            clean_stmt = statement.strip()
+            # =====================================================================
+
+            # 2. Now it is completely safe to run your custom URI gateways:
+            if clean_stmt.startswith("Apex-Force-Internal//") and clean_stmt.endswith("=Launch"):
+                try:
+                    root_folder, body_string = clean_stmt.split("//", 1)
+                    tokens = body_string.split("=")
+
+                    subfolder_version = tokens[0]  # e.g., '0.0.1Alpha'
+                    target_module     = tokens[1]  # e.g., 'Bella'
+                    target_filename   = tokens[2]  # e.g., 'test'
+                    database_scope    = tokens[3]  # e.g., 'Local'
+
+                    # 3. Locate your fork's root workspace directory paths
+                    repo_root = Path(__file__).resolve().parents[2]
+
+                    # 4. Map the exact path sequence defined by your string anatomy:
+                    # CPyThomas / Apex-Force-Internal / 0.0.1ALPHA / Bella / test.txt
+                    target_path = repo_root / root_folder / subfolder_version / target_module / f"{target_filename}.txt"
+
+                    # 5. Enforce safety checks and launch the payload output
+                    if database_scope == "Local":
+                        if target_path.exists():
+                            # Clear the screen first to make the presentation clean
+                            _clear_screen()
+
+                            print(f"\n [Apex Engine] Successfully Launched Matrix: {target_filename}.txt")
+                            print(f" Resolved File Mapping: {target_path.relative_to(repo_root)}")
+                            print("—" * 65)
+                            print(target_path.read_text(encoding="utf-8"))
+                            print("—" * 65 + "\n")
+                        else:
+                            print(f"\n [Apex Database Error] Target location missing: {target_filename}.txt")
+                            print(f" System checked path: {target_path}\n")
+                    else:
+                        print(f"\n [Apex Engine Error] Unknown database scope: '{database_scope}'\n")
+
+                except Exception as parse_error:
+                    print(f"\n [Apex Parsing Failure] Malformed layout execution: {parse_error}\n")
+                continue
+            # -------------------------------------------------------------
+
+# End of ApexForce Studio modifications.
 
             if maybe_run_command(statement):
                 continue
